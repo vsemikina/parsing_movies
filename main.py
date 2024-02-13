@@ -16,7 +16,7 @@ def read_movie_ids(input_csv):
 def parse_imdb_technical_page(imdb_id):
     url = f'https://www.imdb.com/title/{imdb_id}/technical'
     headers = {
-        'User-Agent': 'Mozilla/5.0'
+        'User-Agent': 'Mozilla/5.0' 
     }
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
@@ -40,20 +40,18 @@ def parse_imdb_technical_page(imdb_id):
     }
 
     for detail_name, detail_id in details_ids.items():
-        # Attempt to find the 'li' element with the appropriate 'id'
         detail_element = soup.find('li', id=detail_id)
         if detail_element:
-            # Once the 'li' element is found, we get the content from the 'div' with class 'ipc-metadata-list-item__content-container'
-            content = detail_element.find('div', class_='ipc-metadata-list-item__content-container')
-            if content:
-                # Get all the text within this 'div', stripping whitespace
-                data[detail_name] = ' '.join(content.stripped_strings)
-            else:
-                # If the specific 'div' isn't found, the detail is not available
-                data[detail_name] = 'N/A'
+            # Instead of looking for one specific div, we get all text within the li element
+            text_parts = detail_element.stripped_strings  # Get all text parts, including those inside <a> tags
+            # Concatenate all parts of the text into one string
+            full_text = ' '.join(text_parts)
+            # Clean up the text to remove unwanted characters like these: â€‹
+            clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
+            data[detail_name] = clean_text
         else:
-            # If the 'li' with the specified 'id' isn't found, the detail is not available
             data[detail_name] = 'N/A'
+
 
     return data
 
