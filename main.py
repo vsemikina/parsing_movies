@@ -16,7 +16,7 @@ def read_movie_ids(input_csv):
 def parse_imdb_technical_page(imdb_id):
     url = f'https://www.imdb.com/title/{imdb_id}/technical'
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        'User-Agent': 'Mozilla/5.0'
     }
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
@@ -25,29 +25,35 @@ def parse_imdb_technical_page(imdb_id):
     soup = BeautifulSoup(response.content, 'html.parser')
     data = {'ID': imdb_id}  # Start with the movie ID
 
-    # The following selectors need to be verified and adjusted according to the actual page structure
-    details_mapping = {
-        'Runtime': 'section#runtime',
-        'Sound Mix': 'section#sound_mix',
-        'Color': 'section#color_info',
-        'Aspect Ratio': 'section#aspect_ratio',
-        'Camera': 'section#camera',
-        'Laboratory': 'section#laboratory',
-        'Film Length': 'section#film_length',
-        'Negative Format': 'section#negative_format',
-        'Cinematographic Process': 'section#cinematographic_process',
-        'Printed Film Format': 'section#printed_film_format'
+    # We can see from the screenshot that the data is in 'li' elements with specific 'id'
+    details_ids = {
+        'Runtime': 'runtime',
+        'Sound Mix': 'soundMix',
+        'Color': 'color',
+        'Aspect Ratio': 'aspectRatio',
+        'Camera': 'cameras',
+        'Laboratory': 'laboratory',
+        'Film Length': 'filmLength',
+        'Negative Format': 'negativeFormat',
+        'Cinematographic Process': 'process',
+        'Printed Film Format': 'printedFormat'
     }
 
-    for detail, selector in details_mapping.items():
-        element = soup.select_one(selector)
-        if element:
-            # Here we'd parse the element text to get the required information
-            # This may involve selecting specific child elements within 'element'
-            value = ' '.join(element.stripped_strings) if element else 'N/A'
-            data[detail] = value
+    for detail_name, detail_id in details_ids.items():
+        # Attempt to find the 'li' element with the appropriate 'id'
+        detail_element = soup.find('li', id=detail_id)
+        if detail_element:
+            # Once the 'li' element is found, we get the content from the 'div' with class 'ipc-metadata-list-item__content-container'
+            content = detail_element.find('div', class_='ipc-metadata-list-item__content-container')
+            if content:
+                # Get all the text within this 'div', stripping whitespace
+                data[detail_name] = ' '.join(content.stripped_strings)
+            else:
+                # If the specific 'div' isn't found, the detail is not available
+                data[detail_name] = 'N/A'
         else:
-            data[detail] = 'N/A'  # Use 'N/A' for missing data
+            # If the 'li' with the specified 'id' isn't found, the detail is not available
+            data[detail_name] = 'N/A'
 
     return data
 
@@ -59,7 +65,7 @@ def save_to_csv(data_list, filename='imdb_technical_data.csv'):
 
 # Main script execution
 if __name__ == '__main__':
-    input_csv = 'path/to/your/input.csv'  # Update this to your input CSV file path
+    input_csv = 'C:/Users/Acer/Downloads/Telegram Desktop/id_movies_sample.csv'  # Update this to your input CSV file path
     imdb_ids = read_movie_ids(input_csv)
     data_list = []
 
