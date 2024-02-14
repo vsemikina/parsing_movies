@@ -38,7 +38,6 @@ def parse_imdb_technical_page(imdb_id):
         'Cinematographic Process': 'process',
         'Printed Film Format': 'printedFormat'
     }
-
     for detail_name, detail_id in details_ids.items():
         detail_element = soup.find('li', id=detail_id)
         if detail_element:
@@ -51,8 +50,6 @@ def parse_imdb_technical_page(imdb_id):
             data[detail_name] = clean_text
         else:
             data[detail_name] = 'N/A'
-
-
     return data
 
 # Function to save data to a CSV file
