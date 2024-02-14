@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 import csv
+import re
 
 # Function to read movie IDs from a CSV file
 def read_movie_ids(input_csv):
@@ -14,6 +15,9 @@ def read_movie_ids(input_csv):
 
 # Function to parse a movie's technical page on IMDb
 def parse_imdb_technical_page(imdb_id):
+    if not re.match(r'^tt\d+$', imdb_id):
+        print(f"Invalid IMDb ID format: {imdb_id}")
+        return None  # Skip processing this ID
     url = f'https://www.imdb.com/title/{imdb_id}/technical'
     headers = {
         'User-Agent': 'Mozilla/5.0' 
