@@ -4,6 +4,7 @@ import pandas as pd
 import time
 import csv
 import re
+from lxml import html
 
 # Function to read movie IDs from a CSV file
 def read_movie_ids(input_csv):
@@ -16,7 +17,6 @@ def read_movie_ids(input_csv):
 # Function to parse a movie's technical page on IMDb
 def parse_imdb_technical_page(imdb_id):
     if not re.match(r'^tt\d+$', imdb_id):
-        print(f"Invalid IMDb ID format: {imdb_id}")
         return None  # Skip processing this ID
     url = f'https://www.imdb.com/title/{imdb_id}/technical'
     headers = {
@@ -26,30 +26,30 @@ def parse_imdb_technical_page(imdb_id):
     if response.status_code != 200:
         print(f"Failed to fetch page for ID {imdb_id}")
         return {'ID': imdb_id}  # Return at least the ID with empty details
-    soup = BeautifulSoup(response.content, 'html.parser')
+    tree = html.fromstring(response.content)
     data = {'ID': imdb_id}  # Start with the movie ID
 
-    # We can see from the screenshot that the data is in 'li' elements with specific 'id'
-    details_ids = {
-        'Runtime': 'runtime',
-        'Sound Mix': 'soundMix',
-        'Color': 'color',
-        'Aspect Ratio': 'aspectRatio',
-        'Camera': 'cameras',
-        'Laboratory': 'laboratory',
-        'Film Length': 'filmLength',
-        'Negative Format': 'negativeFormat',
-        'Cinematographic Process': 'process',
-        'Printed Film Format': 'printedFormat'
+    # Update XPath for Aspect Ratio and Sound Mix
+    xpaths = {
+        'Runtime': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[1]',
+        'Color': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[3]',
+        'Sound Mix': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[2]',
+        'Aspect Ratio': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[4]',
+        'Camera': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[5]',
+        'Laboratory': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[6]',
+        'Film Length': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[7]',
+        'Negative Format': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[8]',
+        'Cinematographic Process': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[9]',
+        'Printed Film Format': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[10]',
+
     }
-    for detail_name, detail_id in details_ids.items():
-        detail_element = soup.find('li', id=detail_id)
+
+    for detail_name, detail_xpath in xpaths.items():
+        detail_element = tree.xpath(detail_xpath)
         if detail_element:
-            # Instead of looking for one specific div, we get all text within the li element
-            text_parts = detail_element.stripped_strings  # Get all text parts, including those inside <a> tags
-            # Concatenate all parts of the text into one string
-            full_text = ' '.join(text_parts)
-            # Clean up the text to remove unwanted characters like these: â€‹
+            # Joining text content from the selected elements
+            full_text = ' '.join([elem.text_content() for elem in detail_element])
+            # Clean up the text to remove unwanted characters
             clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
             data[detail_name] = clean_text
         else:
@@ -59,7 +59,7 @@ def parse_imdb_technical_page(imdb_id):
 # Function to save data to a CSV file
 def save_to_csv(data_list, filename='imdb_technical_data.csv'):
     df = pd.DataFrame(data_list)
-    df.to_csv(filename, index=False)
+    df.to_csv(filename, index=False, sep = ';')
     print(f"Data saved to {filename}.")
 
 # Main script execution
