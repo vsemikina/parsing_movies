@@ -27,56 +27,56 @@ def parse_imdb_technical_page(imdb_id):
         print(f"Failed to fetch page for ID {imdb_id}")
         return {'ID': imdb_id}  # Return at least the ID with empty details
     
-    # Use lxml for XPath specific cases
+    # Initialize BeautifulSoup and lxml parsers
+    soup = BeautifulSoup(response.content, 'html.parser')
     tree = html.fromstring(response.content)
     
-    # Initialize the data dictionary with the movie ID
-    data = {'ID': imdb_id}
+    data = {'ID': imdb_id}  # Start with the movie ID
     
-    # Specific details using XPath at their original positions
-    xpaths = {
-        'Sound Mix': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[2]/div/ul/li/a/text()',
-        'Aspect Ratio': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[4]/div/ul/li/span/text()',
+    # Define the order and parsing method for each section
+    sections_details = {
+        'Runtime': ('runtime', 'bs4'),
+        'Sound Mix': ('soundMix', 'xpath', '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[2]/div/ul/li/a/text()'),
+        'Color': ('colorations', 'bs4'),
+        'Aspect Ratio': ('aspectRatio', 'xpath', '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[4]/div/ul/li/span/text()'),
+        'Camera': ('cameras', 'bs4'),
+        'Laboratory': ('laboratory', 'bs4'),
+        'Film Length': ('filmLength', 'bs4'),
+        'Negative Format': ('negativeFormat', 'bs4'),
+        'Cinematographic Process': ('process', 'bs4'),
+        'Printed Film Format': ('printedFormat', 'bs4')
     }
     
-    for detail_name, detail_xpath in xpaths.items():
-        detail_elements = tree.xpath(detail_xpath)
-        if detail_elements:
-            data[detail_name] = detail_elements[0].strip()
-        else:
-            data[detail_name] = 'N/A'
-    
-    # Use BeautifulSoup for general parsing for other details
-    soup = BeautifulSoup(response.content, 'html.parser')
-    details_ids = {
-        'Runtime': 'runtime',
-        'Color': 'color',
-        'Camera': 'cameras',
-        'Laboratory': 'laboratory',
-        'Film Length': 'filmLength',
-        'Negative Format': 'negativeFormat',
-        'Cinematographic Process': 'process',
-        'Printed Film Format': 'printedFormat'
-    }
-    
-    for detail_name, detail_id in details_ids.items():
-        if detail_name not in data:  # Skip if already processed by XPath
-            detail_element = soup.find('li', id=detail_id)
-            if detail_element:
-                # Directly find the primary content span
-                primary_content = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item')
-                sub_text_content = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item--subText')
+    for section, details in sections_details.items():
+        detail_id, method = details[0], details[1]
+        
+        if method == 'bs4':
+            if section == 'Color':
+                detail_element = soup.find('li', id="colorations")
+                if detail_element:
+                    # Find the direct <a> tag containing the color information
+                    color_link = detail_element.find('a', class_="ipc-metadata-list-item__list-content-item")
+                    if color_link:
+                        # This ensures you're only getting text from the targeted <a> tag
+                        color_text = color_link.get_text(strip=True).encode('ascii', 'ignore').decode('ascii')
+                        data[section] = color_text
+                    else:
+                        data[section] = 'N/A'
+            else:           
+                detail_element = soup.find('li', id=detail_id)
+                if detail_element:
+                    value_text = " ".join(detail_element.stripped_strings).encode('ascii', 'ignore').decode('ascii')
+                    data[section] = value_text
+                else:
+                    data[section] = 'N/A'
                 
-                primary_text = primary_content.get_text(strip=True) if primary_content else 'N/A'
-                sub_text = sub_text_content.get_text(strip=True) if sub_text_content else ''
-                
-                # Concatenate primary text with sub text if sub text exists
-                full_text = f"{primary_text} {sub_text}".strip() if sub_text else primary_text
-                
-                clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
-                data[detail_name] = clean_text
+        elif method == 'xpath':
+            xpath = details[2]
+            detail_elements = tree.xpath(xpath)
+            if detail_elements:
+                data[section] = detail_elements[0].strip()
             else:
-                data[detail_name] = 'N/A'
+                data[section] = 'N/A'
     
     return data
 
