@@ -1,15 +1,15 @@
-ID;Runtime;Color;Sound Mix;Aspect Ratio;Camera;Laboratory;Film Length;Negative Format;Cinematographic Process;Printed Film Format
-tt2356777;55m;Color;Dolby Digital;1.78 : 1;Arri Alexa SXT, Panavision Primo, C-Series and Ultra Speed Z-Series MKII Lenses;DeLuxe, New York (NY), USAFilm Lab, New York (NY), USA;35 mm(Kodak Vision3 50D 5203, Vision3 500T 5219)Redcode RAWSxS Pro;35 mm(Kodak Vision3 50D 5203, Vision3 500T 5219)Redcode RAWSxS Pro;Video(HDTV);N/A
-tt0944947;69h 49m;Color;Dolby Digital;1.78 : 1;Arri Alexa SXT Plus, Cooke S4/i, Hawk V-Series and Angenieux Optimo Lenses;Digital;Codex(season2-)Digital Intermediate (2K)(master format)Dolby VisionHDCAM SR(season 1)HDR10Hawk Scope(anamorphic, season 8, source format, some scenes)ProRes(season 2-)Redcode RAW(some shots, Season 5-);Codex(season2-)Digital Intermediate (2K)(master format)Dolby VisionHDCAM SR(season 1)HDR10Hawk Scope(anamorphic, season 8, source format, some scenes)ProRes(season 2-)Redcode RAW(some shots, Season 5-);N/A;N/A
-tt13159924;50m;Color;Dolby Digital;16:9 HD;N/A;N/A;N/A;N/A;N/A;N/A
-tt0306414;59m;Color;Dolby Digital;16:9 HD;Panavision Cameras and Lenses;Postworks, New York, USA;35 mm35 mm(Kodak Vision 200T 5274)35 mm(Kodak Vision 500T 5279);35 mm35 mm(Kodak Vision 200T 5274)35 mm(Kodak Vision 500T 5279);35 mm;N/A
-tt16419074;1h 51m;Color;Dolby Digital;1.85 : 1;Arri Alexa Mini LF, Panavision Primo, VA and Angenieux Optimo Lenses;16 mm(some scenes)CodexRedcode RAW(8K);ARRIRAW(4.5K, 4.6K, source format)Digital Intermediate(4K, master format)Redcode RAW(8K, source format)Super 16(source format, some scenes);ARRIRAW(4.5K, 4.6K, source format)Digital Intermediate(4K, master format)Redcode RAW(8K, source format)Super 16(source format, some scenes);N/A;N/A
-tt29025916;4m;Black and White;Stereo;1.66 : 1;N/A;N/A;N/A;N/A;N/A;N/A
-tt14586350;6h 18m;Color;Dolby Digital;2.00 : 1;N/A;Digital Intermediate(4K, master format);N/A;N/A;N/A;N/A
-tt21909764;1h 57m;N/A;Color;N/A;N/A;N/A;N/A;N/A;N/A;N/A
-tt14954666;4h 36m;Color;Dolby Digital;2.00 : 1;Arriflex 435 Xtreme, Leitz Summicron-C and Summilux-C Lenses;Company 3;35 mm(Kodak);35 mm(Kodak);Video(UHD);N/A
-tt3581920;50m;Color;Dolby Atmos;1.78 : 1;N/A;Company 3;Codex;Codex;Digital(HDTV);N/A
-tt3581921;;;;;;;;;;
-tt3581922;16m;N/A;Color;N/A;N/A;N/A;N/A;N/A;N/A;N/A
-tt3581923;;;;;;;;;;
-tt3581924;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A
+ID,Runtime,Sound Mix,Color,Aspect Ratio,Camera,Laboratory,Film Length,Negative Format,Cinematographic Process,Printed Film Format
+tt2356777,55m,N/A,N/A,N/A,"Arri Alexa Mini, Panavision Primo, C-Series and PVintage Lenses (season 3)","DeLuxe, New York (NY), USA",N/A,"35 mm (Kodak Vision3 50D 5203, Vision3 500T 5219)","Digital Intermediate (2K, master format)",Video (HDTV)
+tt0944947,69h 49m (4189 min) (entire series),N/A,N/A,N/A,"Arri Alexa Mini, Cooke S4/i and Hawk V-Series Lenses (season 8)",N/A,N/A,Digital,Codex (season2-),Digital (HDTV)
+tt13159924,50m,N/A,N/A,N/A,Sony Venice,N/A,N/A,N/A,N/A,N/A
+tt0306414,59m,N/A,N/A,N/A,Panaflex Millennium XL (as Panaflex Camera and Lenses by Panavision),"Postworks, New York, USA",N/A,35 mm (Kodak Vision 200T 5274),Super 35 (3-perf),35 mm
+tt16419074,1h 51m (111 min),N/A,N/A,N/A,"Arri Alexa 35, Panavision Primo, VA and Angenieux Optimo Lenses (some scenes)",N/A,N/A,16 mm (some scenes),"ARRIRAW (4.5K, 4.6K, source format)",N/A
+tt29025916,4m (Australia),N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+tt14586350,6h 18m (378 min) (entire series),N/A,N/A,N/A,Panavision Panaspeed Lenses,N/A,N/A,N/A,"Digital Intermediate (4K, master format)",N/A
+tt21909764,1h 57m (117 min),N/A,N/A,N/A,Hawk V-Series Anamorphic Lenses,N/A,N/A,N/A,N/A,N/A
+tt14954666,4h 36m (276 min),N/A,N/A,N/A,"Arricam LT, Leitz Summicron-C and Summilux-C Lenses",Company 3,N/A,35 mm (Kodak),"Digital Intermediate (4K, master format)",Video (UHD)
+tt3581920,50m,N/A,N/A,N/A,"Arri Alexa Mini, Cooke S4/i lenses",Company 3,N/A,Codex,"ARRIRAW (3.4K, source format)",Digital (HDTV)
+tt3581921,,,,,,,,,,
+tt3581922,16m,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+tt3581923,,,,,,,,,,
+tt3581924,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
