@@ -31,27 +31,27 @@ def parse_imdb_technical_page(imdb_id):
 
     # Update XPath for Aspect Ratio and Sound Mix
     xpaths = {
-        'Runtime': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[1]',
-        'Color': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[3]',
-        'Sound Mix': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[2]',
-        'Aspect Ratio': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[4]',
-        'Camera': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[5]',
-        'Laboratory': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[6]',
-        'Film Length': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[7]',
-        'Negative Format': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[8]',
-        'Cinematographic Process': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[9]',
-        'Printed Film Format': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[10]',
+        'Runtime': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[1]/div/ul/li/span/text()',
+        'Color': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[3]/div/ul/li/a/text()',
+        'Sound Mix': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[2]/div/ul/li/a/text()',
+        'Aspect Ratio': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[4]/div/ul/li/span/text()',
+        'Camera': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[5]/div/ul/li[2]/span[1]/text()',
+        'Laboratory': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[6]/div/ul',
+        'Film Length': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[7]/div/ul',
+        'Negative Format': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[7]/div/ul',
+        'Cinematographic Process': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[9]/div/ul',
+        'Printed Film Format': '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[10]/div/ul',
 
     }
 
     for detail_name, detail_xpath in xpaths.items():
-        detail_element = tree.xpath(detail_xpath)
-        if detail_element:
-            # Joining text content from the selected elements
-            full_text = ' '.join([elem.text_content() for elem in detail_element])
-            # Clean up the text to remove unwanted characters
-            clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
-            data[detail_name] = clean_text
+        detail_elements = tree.xpath(detail_xpath)
+        if detail_elements:
+            # Assuming each detail is singular; for multiple elements, additional handling is needed
+            if isinstance(detail_elements[0], str):
+                data[detail_name] = detail_elements[0].strip()
+            else:
+                 data[detail_name] = detail_elements[0].text_content().strip() 
         else:
             data[detail_name] = 'N/A'
     return data
