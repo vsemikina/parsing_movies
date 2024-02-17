@@ -1,15 +1,15 @@
-ID,Runtime,Sound Mix,Color,Aspect Ratio,Camera,Laboratory,Film Length,Negative Format,Cinematographic Process,Printed Film Format
-tt2356777,55m,Dolby Digital,Color,1.78 : 1,"Arri Alexa Mini, Panavision Primo, C-Series and PVintage Lenses (season 3)","DeLuxe, New York (NY), USA",N/A,"35 mm (Kodak Vision3 50D 5203, Vision3 500T 5219)","Digital Intermediate (2K, master format)",Video (HDTV)
-tt0944947,69h 49m (4189 min) (entire series),"Dolby Digital, Dolby Atmos",Color,1.78 : 1,"Arri Alexa Mini, Cooke S4/i and Hawk V-Series Lenses (season 8)",N/A,N/A,Digital,Codex (season2-),Digital (HDTV)
-tt13159924,50m,Dolby Digital,Color,16:9 HD,Sony Venice,N/A,N/A,N/A,N/A,N/A
-tt0306414,,,,,,,,,,
-tt16419074,1h 51m (111 min),Dolby Digital,Color,1.85 : 1,"Arri Alexa 35, Panavision Primo, VA and Angenieux Optimo Lenses (some scenes)",N/A,N/A,16 mm (some scenes),"ARRIRAW (4.5K, 4.6K, source format)",N/A
-tt29025916,4m (Australia),Stereo,Black and White,1.66 : 1,N/A,N/A,N/A,N/A,N/A,N/A
-tt14586350,6h 18m (378 min) (entire series),Dolby Digital,Color,2.00 : 1,Panavision Panaspeed Lenses,N/A,N/A,N/A,"Digital Intermediate (4K, master format)",N/A
-tt21909764,1h 57m (117 min),N/A,Color,N/A,Hawk V-Series Anamorphic Lenses,N/A,N/A,N/A,N/A,N/A
-tt14954666,4h 36m (276 min),Dolby Digital,Color,2.00 : 1,"Arricam LT, Leitz Summicron-C and Summilux-C Lenses",Company 3,N/A,35 mm (Kodak),"Digital Intermediate (4K, master format)",Video (UHD)
-tt3581920,50m,"Dolby Atmos, Dolby Digital",Color,1.78 : 1,"Arri Alexa Mini, Cooke S4/i lenses",Company 3,N/A,Codex,"ARRIRAW (3.4K, source format)",Digital (HDTV)
-tt3581921,,,,,,,,,,
-tt3581922,16m,N/A,Color,N/A,N/A,N/A,N/A,N/A,N/A,N/A
-tt3581923,,,,,,,,,,
-tt3581924,N/A,N/A,Color,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+ID;Runtime;Sound Mix;Color;Aspect Ratio;Camera;Laboratory;Film Length;Negative Format;Cinematographic Process;Printed Film Format
+tt2356777;55m;Dolby Digital;Color;1.78 : 1;Arri Alexa Mini, Panavision Primo, C-Series and PVintage Lenses (season 3);DeLuxe, New York (NY), USA;N/A;35 mm (Kodak Vision3 50D 5203, Vision3 500T 5219);Digital Intermediate (2K, master format);Video (HDTV)
+tt0944947;69h 49m (4189 min) (entire series);Dolby Digital, Dolby Atmos (Blu-ray release);Color;1.78 : 1;Arri Alexa Mini, Cooke S4/i and Hawk V-Series Lenses (season 8);N/A;N/A;Digital;Codex (season2-);Digital (HDTV)
+tt13159924;50m;Dolby Digital;Color;16:9 HD;Sony Venice;N/A;N/A;N/A;N/A;N/A
+tt0306414;59m;Dolby Digital (seasons 3-5), Dolby (Dolby Surround, seasons 1-2);Color;16:9 HD (restored hd version), 4:3;Panaflex Millennium XL (as Panaflex Camera and Lenses by Panavision);Postworks, New York, USA;N/A;35 mm (Kodak Vision 200T 5274);Super 35 (3-perf);35 mm
+tt16419074;1h 51m (111 min);Dolby Digital;Color;1.85 : 1;Arri Alexa 35, Panavision Primo, VA and Angenieux Optimo Lenses (some scenes);N/A;N/A;16 mm (some scenes);ARRIRAW (4.5K, 4.6K, source format);N/A
+tt29025916;4m (Australia);Stereo (RCA Sound Recording);Black and White (Color Noir);1.66 : 1;N/A;N/A;N/A;N/A;N/A;N/A
+tt14586350;6h 18m (378 min) (entire series);Dolby Digital;Color;2.00 : 1;Panavision Panaspeed Lenses;N/A;N/A;N/A;Digital Intermediate (4K, master format);N/A
+tt21909764;1h 57m (117 min);N/A;Color;N/A;Hawk V-Series Anamorphic Lenses;N/A;N/A;N/A;N/A;N/A
+tt14954666;4h 36m (276 min);Dolby Digital;Color;2.00 : 1;Arricam LT, Leitz Summicron-C and Summilux-C Lenses;Company 3;N/A;35 mm (Kodak);Digital Intermediate (4K, master format);Video (UHD)
+tt3581920;50m;Dolby Atmos, Dolby Digital;Color;1.78 : 1;Arri Alexa Mini, Cooke S4/i lenses;Company 3;N/A;Codex;ARRIRAW (3.4K, source format);Digital (HDTV)
+tt3581921;;;;;;;;;;
+tt3581922;16m;N/A;Color;N/A;N/A;N/A;N/A;N/A;N/A;N/A
+tt3581923;;;;;;;;;;
+tt3581924;N/A;N/A;Color;N/A;N/A;N/A;N/A;N/A;N/A;N/A

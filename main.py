@@ -16,11 +16,19 @@ def read_movie_ids(input_csv):
     return movie_ids
 
 def extract_section_value(detail_element):
-    values = detail_element.find_all(class_="ipc-metadata-list-item__list-content-item")
-    extracted_values = [value.get_text(strip=True).encode('ascii', 'ignore').decode('ascii') for value in values]
-    if extracted_values:
-        return ', '.join(extracted_values)  # Join multiple values with a comma
-    return 'N/A'
+    all_texts = []  # List to hold all texts including subtexts
+        # Find all the main content items
+    content_items = detail_element.find_all(class_="ipc-metadata-list-item__list-content-item")
+    for item in content_items:
+        main_text = item.get_text(strip=True).encode('ascii', 'ignore').decode('ascii')
+            # Attempt to find the next sibling for subtext, if it exists right after the main content
+        subtext_span = item.find_next_sibling('span', class_='ipc-metadata-list-item__list-content-item--subText')
+        subtext = subtext_span.get_text(strip=True).encode('ascii', 'ignore').decode('ascii') if subtext_span else ''
+            # Concatenate main text and subtext
+        full_text = f"{main_text} {subtext}".strip()
+        all_texts.append(full_text)
+        # Join all texts with a comma for sections with multiple items
+    return ', '.join(all_texts) if all_texts else 'N/A'
 
 def parse_imdb_technical_page(imdb_id):
     if not re.match(r'^tt\d+$', imdb_id):
@@ -55,7 +63,6 @@ def parse_imdb_technical_page(imdb_id):
     }
     
     for detail_name, detail_id in details_ids.items():
-            
         detail_element = soup.find('li', id=detail_id)
         if detail_element:
             if detail_name in ['Sound Mix', 'Aspect Ratio', 'Color']:
@@ -63,16 +70,16 @@ def parse_imdb_technical_page(imdb_id):
                 data[detail_name] = extract_section_value(detail_element)
             else:
                     # Handle other sections that may not require the extraction of multiple values
-                            value_span = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item')
-                            subtext_span = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item--subText')
+                value_span = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item')
+                subtext_span = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item--subText')
                             
-                            value_text = value_span.get_text(strip=True) if value_span else ''
-                            subtext = subtext_span.get_text(strip=True) if subtext_span else ''
+                value_text = value_span.get_text(strip=True) if value_span else ''
+                subtext = subtext_span.get_text(strip=True) if subtext_span else ''
                             
-                            full_text = f"{value_text} {subtext}".strip()
+                full_text = f"{value_text} {subtext}".strip()
                             
-                            clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
-                            data[detail_name] = clean_text
+                clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
+                data[detail_name] = clean_text
         else:
             data[detail_name] = 'N/A'
     
@@ -81,7 +88,7 @@ def parse_imdb_technical_page(imdb_id):
 
 def save_to_csv(data_list, filename='imdb_technical_data.csv'):
     df = pd.DataFrame(data_list)
-    df.to_csv(filename, index=False)
+    df.to_csv(filename, index=False, sep = ';')
     print(f"Data saved to {filename}.")
 # Main script execution
 if __name__ == '__main__':
