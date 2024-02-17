@@ -69,17 +69,22 @@ def parse_imdb_technical_page(imdb_id):
                     # Use the extract_section_value function for these specific sections
                 data[detail_name] = extract_section_value(detail_element)
             else:
-                    # Handle other sections that may not require the extraction of multiple values
-                value_span = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item')
-                subtext_span = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item--subText')
-                            
-                value_text = value_span.get_text(strip=True) if value_span else ''
-                subtext = subtext_span.get_text(strip=True) if subtext_span else ''
-                            
-                full_text = f"{value_text} {subtext}".strip()
-                            
-                clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
-                data[detail_name] = clean_text
+                all_texts = []  # List to hold texts from all list items including subtexts
+                list_items = detail_element.find_all('li', role="presentation")
+                
+                for item in list_items:
+                    main_content = item.find('span', class_='ipc-metadata-list-item__list-content-item')
+                    main_text = main_content.get_text(strip=True) if main_content else ''
+                    
+                    subtext_content = item.find('span', class_='ipc-metadata-list-item__list-content-item--subText')
+                    subtext = subtext_content.get_text(strip=True) if subtext_content else ''
+                    
+                    full_text = f"{main_text} {subtext}".strip()
+                    clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
+                    all_texts.append(clean_text)
+                    
+                
+                data[detail_name] = ', '.join(all_texts) if all_texts else 'N/A'
         else:
             data[detail_name] = 'N/A'
     
