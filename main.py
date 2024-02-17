@@ -15,6 +15,13 @@ def read_movie_ids(input_csv):
         movie_ids = [row[0] for row in reader]
     return movie_ids
 
+def extract_section_value(detail_element):
+    values = detail_element.find_all(class_="ipc-metadata-list-item__list-content-item")
+    extracted_values = [value.get_text(strip=True).encode('ascii', 'ignore').decode('ascii') for value in values]
+    if extracted_values:
+        return ', '.join(extracted_values)  # Join multiple values with a comma
+    return 'N/A'
+
 def parse_imdb_technical_page(imdb_id):
     if not re.match(r'^tt\d+$', imdb_id):
         print(f"Invalid IMDb ID format: {imdb_id}")
@@ -29,54 +36,45 @@ def parse_imdb_technical_page(imdb_id):
     
     # Initialize BeautifulSoup and lxml parsers
     soup = BeautifulSoup(response.content, 'html.parser')
-    tree = html.fromstring(response.content)
+    #tree = html.fromstring(response.content)
     
     data = {'ID': imdb_id}  # Start with the movie ID
     
     # Define the order and parsing method for each section
-    sections_details = {
-        'Runtime': ('runtime', 'bs4'),
-        'Sound Mix': ('soundMix', 'xpath', '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[2]/div/ul/li/a/text()'),
-        'Color': ('colorations', 'bs4'),
-        'Aspect Ratio': ('aspectRatio', 'xpath', '/html/body/div[2]/main/div/section/div/section/div/div[1]/section[1]/div/ul/li[4]/div/ul/li/span/text()'),
-        'Camera': ('cameras', 'bs4'),
-        'Laboratory': ('laboratory', 'bs4'),
-        'Film Length': ('filmLength', 'bs4'),
-        'Negative Format': ('negativeFormat', 'bs4'),
-        'Cinematographic Process': ('process', 'bs4'),
-        'Printed Film Format': ('printedFormat', 'bs4')
+    details_ids = {
+        'Runtime': 'runtime',
+        'Sound Mix': 'soundmixes',
+        'Color': 'colorations',
+        'Aspect Ratio': 'aspectratio',
+        'Camera': 'cameras',
+        'Laboratory': 'laboratory',
+        'Film Length': 'filmLength',
+        'Negative Format': 'negativeFormat',
+        'Cinematographic Process': 'process',
+        'Printed Film Format': 'printedFormat'
     }
     
-    for section, details in sections_details.items():
-        detail_id, method = details[0], details[1]
-        
-        if method == 'bs4':
-            if section == 'Color':
-                detail_element = soup.find('li', id="colorations")
-                if detail_element:
-                    # Find the direct <a> tag containing the color information
-                    color_link = detail_element.find('a', class_="ipc-metadata-list-item__list-content-item")
-                    if color_link:
-                        # This ensures you're only getting text from the targeted <a> tag
-                        color_text = color_link.get_text(strip=True).encode('ascii', 'ignore').decode('ascii')
-                        data[section] = color_text
-                    else:
-                        data[section] = 'N/A'
-            else:           
-                detail_element = soup.find('li', id=detail_id)
-                if detail_element:
-                    value_text = " ".join(detail_element.stripped_strings).encode('ascii', 'ignore').decode('ascii')
-                    data[section] = value_text
-                else:
-                    data[section] = 'N/A'
-                
-        elif method == 'xpath':
-            xpath = details[2]
-            detail_elements = tree.xpath(xpath)
-            if detail_elements:
-                data[section] = detail_elements[0].strip()
+    for detail_name, detail_id in details_ids.items():
+            
+        detail_element = soup.find('li', id=detail_id)
+        if detail_element:
+            if detail_name in ['Sound Mix', 'Aspect Ratio', 'Color']:
+                    # Use the extract_section_value function for these specific sections
+                data[detail_name] = extract_section_value(detail_element)
             else:
-                data[section] = 'N/A'
+                    # Handle other sections that may not require the extraction of multiple values
+                            value_span = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item')
+                            subtext_span = detail_element.find('span', class_='ipc-metadata-list-item__list-content-item--subText')
+                            
+                            value_text = value_span.get_text(strip=True) if value_span else ''
+                            subtext = subtext_span.get_text(strip=True) if subtext_span else ''
+                            
+                            full_text = f"{value_text} {subtext}".strip()
+                            
+                            clean_text = full_text.encode('ascii', 'ignore').decode('ascii')
+                            data[detail_name] = clean_text
+        else:
+            data[detail_name] = 'N/A'
     
     return data
 
