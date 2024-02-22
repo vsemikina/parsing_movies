@@ -4,8 +4,9 @@ import pandas as pd
 import time
 import csv
 import re
-from lxml import html
+import os
 
+rejected_ids = []
 
 # Function to read movie IDs from a CSV file
 def read_movie_ids(input_csv):
@@ -32,15 +33,22 @@ def extract_section_value(detail_element):
 
 def parse_imdb_technical_page(imdb_id):
     if not re.match(r'^tt\d+$', imdb_id):
-        print(f"Invalid IMDb ID format: {imdb_id}")
         return None  # Skip processing this ID
     
     url = f'https://www.imdb.com/title/{imdb_id}/technical'
     headers = {'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        rejected_ids.append(imdb_id)
+        return None
+
     if response.status_code != 200:
         print(f"Failed to fetch page for ID {imdb_id}")
-        return {'ID': imdb_id}  # Return at least the ID with empty details
+        rejected_ids.append(imdb_id)
+        return None
+        
     
     # Initialize BeautifulSoup and lxml parsers
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -93,11 +101,19 @@ def parse_imdb_technical_page(imdb_id):
 
 def save_to_csv(data_list, filename='imdb_technical_data.csv'):
     df = pd.DataFrame(data_list)
-    df.to_csv(filename, index=False, sep = ';')
-    print(f"Data saved to {filename}.")
+    file_exists = os.path.isfile(filename)
+    if file_exists:
+        # Append data without headers
+        df.to_csv(filename, mode='a', index=False, sep=';', header=False)
+        print(f"Data appended to {filename}.")
+    else:
+        # Write new file with headers
+        df.to_csv(filename, mode='w', index=False, sep=';', header=True)
+        print(f"Data saved to {filename}.") 
 # Main script execution
+    
 if __name__ == '__main__':
-    input_csv = 'C:/Users/Acer/Downloads/Telegram Desktop/id_movies_sample.csv'  # Update this to your input CSV file path
+    input_csv = 'C:/Projects/Python/parsing_movies/rejected_ids1.csv'  # Update this to your input CSV file path
     imdb_ids = read_movie_ids(input_csv)
     data_list = []
     for imdb_id in imdb_ids:
@@ -109,3 +125,9 @@ if __name__ == '__main__':
         save_to_csv(data_list)
     else:
         print("No data was parsed.")
+if rejected_ids:
+    with open('rejected_ids1.csv', 'a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        for imdb_id in rejected_ids:
+            writer.writerow([imdb_id])
+    print(f"Rejected IDs saved to rejected_ids.csv. Total rejected: {len(rejected_ids)}")
